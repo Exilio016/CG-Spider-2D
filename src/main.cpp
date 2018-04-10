@@ -24,7 +24,7 @@ void draw_circle(spider::circle *circle){
 
 void draw_leg(spider::leg *leg){
     glLineWidth(5);
-    glBegin(GL_LINES);
+    glBegin(GL_LINE_STRIP);
     glVertex2d(leg->orig.x, leg->orig.y);
     glVertex2d(leg->articulation.x, leg->articulation.y);
     glVertex2d(leg->end.x, leg->end.y);
