@@ -9,6 +9,7 @@
 #include <GL/gl.h>
 
 class spider {
+public:
     typedef struct {
         GLdouble x;
         GLdouble y;
@@ -25,11 +26,16 @@ class spider {
         t_point end;
     }leg;
 
-private:
-    circle eyes[2];
-    circle cephalothorax;
-    circle abdomen;
-    leg legs[8];
+//private:
+    circle **eyes;
+    circle *cephalothorax;
+    circle *abdomen;
+    leg **legs;
+    t_point *center;
+
+public:
+    spider(t_point *pos);
+
 
 };
 
