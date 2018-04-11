@@ -1,0 +1,52 @@
+#!/bin/sh
+
+program=`basename "$0"` 
+
+if [ "$1" != "" ]
+then
+   while (( "$#" )); 
+   do 
+      case "$1" in
+
+         "-h"|"-help"|"--h"|"--help")
+            echo "Usage: ./"$program" [FILE] [OPT]"
+            echo "---------------------------------------"
+            echo "-r PROG to run PROG"
+            echo "-v to display version"
+            echo "--clean to autoremove trash"
+            echo "---------------------------------------"
+            ./$program -v;;
+
+         "-r"|"--run")
+            ./$2;;
+
+         "-v"|"--version")
+            echo $program "version 0.3.9";;
+
+         "--clean")
+            array=($(ls ./))
+            for (( i=0; i<${#array[@]}; i++ ));
+            do
+               if [[ "${array[$i]}" == *".cpp"* ]] 
+               then
+                  filename=$(echo ${array[$i]} | cut -f 1 -d '.')
+                  echo "removing "$filename"..."
+                  rm -r $filename
+               fi
+               #printf '%s\n' "${array[@]}" ;;
+            done;;
+
+         *)
+            if [[ "$1" == *".cpp"* ]] 
+            then
+               echo "compiling "$1" ..."
+               filename=$(echo $1 | cut -f 1 -d '.')
+               g++ -o $filename $1 -lglut -lGLU -lGL -lm
+            fi
+
+         esac
+         shift 
+      done
+   else
+      g++ -o main ./*.cpp -I ../includes -lglut -lGLU -lGL -lm
+   fi
