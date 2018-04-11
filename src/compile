@@ -21,7 +21,8 @@ then
             ./$2;;
 
          "-v"|"--version")
-            echo $program "version 0.3.9";;
+            #echo $program "version 0.3.9";;
+            ;;
 
          "--clean")
             array=($(ls ./))
