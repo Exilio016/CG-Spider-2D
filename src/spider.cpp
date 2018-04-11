@@ -8,7 +8,7 @@
 
 #define TORAXSIZE 100
 #define EYESIZE 15
-#define LEGSIZE 100
+#define LEGSIZE 120
 #define ARTICANG 15
 
 spider::spider(spider::t_point *pos) {
@@ -39,7 +39,7 @@ spider::spider(spider::t_point *pos) {
     int k = 0;
     for(int i = 0; i < 8; i++){
         this->legs[i] = new leg;
-        if(k%3 == 0)
+        while((k >= 2 && k <= 4) || k == 9)
             k++;
 
         this->legs[i]->orig.x = this->cephalothorax->center.x
@@ -58,10 +58,21 @@ spider::spider(spider::t_point *pos) {
             this->legs[i]->end.x = this->legs[i]->orig.x - LEGSIZE;
             this->legs[i]->articulation.x = this->legs[i]->orig.x - LEGSIZE/2;
         }
-        this->legs[i]->end.y = this->legs[i]->orig.y - ARTICANG;
 
-
+        this->legs[i]->end.y = this->legs[i]->orig.y - LEGSIZE/2;
         this->legs[i]->articulation.y = this->legs[i]->orig.y + ARTICANG;
+
+
+        if(k == 1 || k == 5) {
+            this->legs[i]->articulation.y = this->legs[i]->orig.y + 3 * LEGSIZE / 2;
+            this->legs[i]->end.y = this->legs[i]->articulation.y + ARTICANG;
+        }
+
+        if(k == 8 || k == 10)
+            this->legs[i]->end.y = this->legs[i]->orig.y - 3*LEGSIZE/2;
+
+
         k++;
     }
+
 }
