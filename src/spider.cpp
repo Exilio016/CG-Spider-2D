@@ -58,7 +58,7 @@ spider::spider(spider::t_point *pos) {
             this->legs[i]->end.x = this->legs[i]->orig.x - LEGSIZE;
             this->legs[i]->articulation.x = this->legs[i]->orig.x - LEGSIZE/2;
         }
-        this->legs[i]->end.y = this->legs[i]->orig.y;
+        this->legs[i]->end.y = this->legs[i]->orig.y - ARTICANG;
 
 
         this->legs[i]->articulation.y = this->legs[i]->orig.y + ARTICANG;
