@@ -1,6 +1,7 @@
 #include<GL/glut.h>
 #include <spider.h>
 #include <math.h>
+#include <iostream>
 
 const GLint WINDOWS_WIDTH = 800, WINDOWS_HEIGHT = 600;
 
@@ -30,7 +31,6 @@ void draw_leg(spider::leg *leg){
    glVertex2d(leg->end.x, leg->end.y);
    glEnd();
    glFlush();
-
 }
 
 void draw_spider(spider *s){
@@ -49,7 +49,7 @@ void init(){
    glClearColor(1, 1, 1, 1);
    glMatrixMode(GL_PROJECTION);
 
-   gluOrtho2D(0, WINDOWS_WIDTH, 0, WINDOWS_HEIGHT);
+   gluOrtho2D(0, WINDOWS_WIDTH, WINDOWS_HEIGHT, 0);
 }
 
 void callback_display(){
@@ -61,7 +61,22 @@ void callback_display(){
    glClear(GL_COLOR_BUFFER_BIT);
    draw_spider(s);
    glutSwapBuffers();
+}
 
+/*Function that associates other functions to
+ * react to the mouse inputs*/
+void mouseClick(GLint button, GLint action, GLint x, GLint y) {
+   //GLUT_DOWN
+   //GLUT_UP
+   if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
+      std::cout<<"click\n";
+   }
+}
+
+/*Function that is called if the mouse is pressed
+ * and moving */
+void mouseDrag(GLint x, GLint y) {
+   std::cout<<"drag x:"<<x<<" y:"<<y<<"\n";
 }
 
 int main(int argc, char *argv[]){
@@ -77,6 +92,9 @@ int main(int argc, char *argv[]){
 
    init();
    glutDisplayFunc(callback_display);
+
+   glutMouseFunc(mouseClick);
+   glutMotionFunc(mouseDrag);
 
    glutMainLoop();
 

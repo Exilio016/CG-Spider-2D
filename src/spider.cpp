@@ -6,10 +6,10 @@
 #include <cmath>
 #include "spider.h"
 
-#define TORAXSIZE 100
-#define EYESIZE 15
-#define LEGSIZE 120
-#define ARTICANG 15
+#define TORAXSIZE 25
+#define EYESIZE 1
+#define LEGSIZE 25
+#define ARTICANG 1
 
 spider::spider(spider::t_point *pos) {
    this->abdomen = new circle;
@@ -70,7 +70,6 @@ spider::spider(spider::t_point *pos) {
 
       if(k == 8 || k == 10)
          this->legs[i]->end.y = this->legs[i]->orig.y - 3*LEGSIZE/2;
-
 
       k++;
    }
