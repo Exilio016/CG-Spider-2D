@@ -26,15 +26,30 @@ public:
         t_point end;
     }leg;
 
-//private:
     circle **eyes;
     circle *cephalothorax;
     circle *abdomen;
     leg **legs;
     t_point *center;
 
+private:
+    typedef enum {
+        stopped,
+        walking_left,
+        walking_dir
+    }state;
+
+    state currentState;
+    state oldState;
+    int it;
+
+    void draw_circle(circle *c);
+    void draw_leg(leg *l);
+
 public:
     spider(t_point *pos);
+    void animate();
+    void draw();
 
 
 };

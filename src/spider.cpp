@@ -6,17 +6,22 @@
 #include <cmath>
 #include "spider.h"
 
-#define TORAXSIZE 100
-#define EYESIZE 15
-#define LEGSIZE 120
-#define ARTICANG 15
+#define TORAXSIZE 50
+#define EYESIZE 6
+#define LEGSIZE 60
+#define ARTICANG 7.5
+#define MAXIT 10;
 
 spider::spider(spider::t_point *pos) {
     this->abdomen = new circle;
     this->cephalothorax = new circle;
     this->legs = new leg*[8];
     this->eyes = new circle*[2];
+
     this->center = pos;
+    this->it = 0;
+    this->currentState = stopped;
+    this->oldState = stopped;
 
     this->abdomen->center.y = pos->y - TORAXSIZE + TORAXSIZE/10;
     this->abdomen->center.x = pos->x;
@@ -64,7 +69,7 @@ spider::spider(spider::t_point *pos) {
 
 
         if(k == 1 || k == 5) {
-            this->legs[i]->articulation.y = this->legs[i]->orig.y + 3 * LEGSIZE / 2;
+            this->legs[i]->articulation.y = this->legs[i]->orig.y + LEGSIZE;
             this->legs[i]->end.y = this->legs[i]->articulation.y + ARTICANG;
         }
 
@@ -74,5 +79,51 @@ spider::spider(spider::t_point *pos) {
 
         k++;
     }
+
+}
+
+void spider::draw_circle(spider::circle *circle){
+    int n_lines = 100;
+    GLdouble x,y;
+
+    x = circle->center.x + circle->radius;
+    y = circle->center.y;
+    glBegin(GL_TRIANGLE_STRIP);
+    for(int i = 0; i <= n_lines; i++){
+        glVertex2d(circle->center.x, circle->center.y);
+        glVertex2d(x, y);
+        x = circle->center.x + circle->radius * cos(2*M_PI*i/n_lines);
+        y = circle->center.y + circle->radius * sin(2*M_PI*i/n_lines);
+        glVertex2d(x,y);
+    }
+    glEnd();
+    glFlush();
+}
+
+void spider::draw_leg(spider::leg *leg){
+    glLineWidth(5);
+    glBegin(GL_LINE_STRIP);
+    glVertex2d(leg->orig.x, leg->orig.y);
+    glVertex2d(leg->articulation.x, leg->articulation.y);
+    glVertex2d(leg->end.x, leg->end.y);
+    glEnd();
+    glFlush();
+
+}
+
+void spider::draw(){
+    glColor3f(0, 0, 0);
+    draw_circle(this->cephalothorax);
+    draw_circle(this->abdomen);
+    for(int i = 0; i < 8; i++)
+        draw_leg(this->legs[i]);
+
+    glColor3f(1,0,0);
+    draw_circle(this->eyes[0]);
+    draw_circle(this->eyes[1]);
+}
+
+void spider::animate() {
+
 
 }
