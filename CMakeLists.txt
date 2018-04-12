@@ -8,7 +8,7 @@ find_package(GLUT REQUIRED)
 
 include_directories(includes ${OPENGL_INCLUDE_DIRs} ${GLUT_INCLUDE_DIRs})
 
-file(GLOB SOURCES "src/*.cpp")
+file(GLOB SOURCES "src/*.cpp" "includes/*.h")
 
 add_executable(Aranha2D ${SOURCES})
 

@@ -1,6 +1,7 @@
 #include<GL/glut.h>
 #include <spider.h>
 #include <cmath>
+#include <matrix.h>
 
 const GLint WINDOWS_WIDTH = 800, WINDOWS_HEIGHT = 600;
 

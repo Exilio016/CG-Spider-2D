@@ -6,9 +6,9 @@
 #include <cmath>
 #include "spider.h"
 
-#define TORAXSIZE 50
+#define TORAXSIZE 80
 #define EYESIZE 6
-#define LEGSIZE 60
+#define LEGSIZE 90
 #define ARTICANG 7.5
 #define MAXIT 10;
 
