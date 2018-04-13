@@ -15,7 +15,7 @@ matrix::matrix(int rows, int cols){
     }
 }
 
-matrix::matrix(spider::t_point *point){
+matrix::matrix(t_point *point){
     this->rows = 3; this->cols = 1;
     this->m = new GLdouble* [3];
 
@@ -64,11 +64,11 @@ void matrix::setRow(int row, GLdouble *vals) {
     this->m[row] = vals;
 }
 
-spider::t_point *matrix::toPoint(){
+t_point *matrix::toPoint(){
     if(this->rows != 3 && this->cols != 1)
         throw std::invalid_argument("Impossible to convert this matrix!");
 
-    spider::t_point *point = new spider::t_point;
+    t_point *point = new t_point;
     point->x = this->m[0][0];
     point->y = this->m[1][0];
 }

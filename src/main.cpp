@@ -13,17 +13,18 @@ void init(){
    glClearColor(1, 1, 1, 1);
    glMatrixMode(GL_PROJECTION);
 
-   gluOrtho2D(0, WINDOWS_WIDTH, WINDOWS_HEIGHT, 0);
-}
-
-void callback_display(){
-   spider::t_point *p = new spider::t_point;
+   t_point *p = new t_point;
    p->x = WINDOWS_WIDTH/2;
    p->y = WINDOWS_HEIGHT/2;
 
    s = new spider(p);
+
+   gluOrtho2D(0, WINDOWS_WIDTH, WINDOWS_HEIGHT, 0);
+}
+
+void callback_display(){
    glClear(GL_COLOR_BUFFER_BIT);
-   draw_spider(s);
+   s->draw();
    glutSwapBuffers();
 }
 

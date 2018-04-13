@@ -7,7 +7,7 @@
 
 
 #include <GL/gl.h>
-#include "spider.h"
+#include "types.h"
 
 class matrix {
 private:
@@ -16,14 +16,16 @@ private:
 
 public:
     matrix(int rows, int cols);
-    matrix(spider::t_point *point);
+    matrix(t_point *point);
 
     void setPos(int row, int col, GLdouble val);
     void setRow(int row, GLdouble *vals);
 
     matrix *multiply(matrix *m2);
 
-    spider::t_point *toPoint();
+    t_point *toPoint();
+
+    GLdouble getPos(int row, int col);
 };
 
 

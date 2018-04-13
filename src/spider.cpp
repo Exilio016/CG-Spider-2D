@@ -18,7 +18,7 @@ enum {
 #define ARTICANG 7.5
 #define MAXIT 10;
 
-spider::spider(spider::t_point *pos) {
+spider::spider(t_point *pos) {
    this->abdomen = new circle;
    this->cephalothorax = new circle;
    this->legs = new leg*[8];
@@ -82,9 +82,9 @@ spider::spider(spider::t_point *pos) {
    }
 }
 
-spider::t_point spider::aux_rotate(GLdouble angle, spider::t_point init) {
-   spider::t_point result;
-   spider::t_point axis = *(this->center);
+t_point spider::aux_rotate(GLdouble angle, t_point init) {
+   t_point result;
+   t_point axis = *(this->center);
    result.x = cos(angle) * init.x - sin(angle) * init.y +
       axis.x * (1 - cos(angle)) + axis.y * sin(angle);
    result.y = sin(angle) * init.x + cos(angle) * init.y +
@@ -93,7 +93,7 @@ spider::t_point spider::aux_rotate(GLdouble angle, spider::t_point init) {
 }
 
 void spider::rotate_spider(GLdouble angle) {
-   spider::t_point aux;
+   t_point aux;
 
    aux = aux_rotate(angle, this->abdomen->center); 
    this->abdomen->center.x = aux.x;
@@ -134,7 +134,7 @@ void spider::move_spider(GLint x, GLint y) {
    }
 }
 
-void spider::draw_circle(spider::circle *circle){
+void spider::draw_circle(circle *circle){
     int n_lines = 100;
     GLdouble x,y;
 
@@ -152,7 +152,7 @@ void spider::draw_circle(spider::circle *circle){
     glFlush();
 }
 
-void spider::draw_leg(spider::leg *leg){
+void spider::draw_leg(leg *leg){
     glLineWidth(5);
     glBegin(GL_LINE_STRIP);
     glVertex2d(leg->orig.x, leg->orig.y);
