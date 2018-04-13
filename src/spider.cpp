@@ -104,12 +104,12 @@ void spider::rotate_spider(GLdouble angle) {
    this->cephalothorax->center.y = aux.y;
 
    aux = aux_rotate(angle, this->eyes[X]->center); 
-   this->eyes[X]->center.x = aux.x;
-   this->eyes[X]->center.y = aux.y;
+   this->eyes[0]->center.x = aux.x;
+   this->eyes[0]->center.y = aux.y;
 
    aux = aux_rotate(angle, this->eyes[Y]->center); 
-   this->eyes[Y]->center.x = aux.x;
-   this->eyes[Y]->center.y = aux.y;
+   this->eyes[1]->center.x = aux.x;
+   this->eyes[1]->center.y = aux.y;
 
    for(int i = 0; i < 8; i++) {
       aux = aux_rotate(angle, this->legs[i]->orig); 
