@@ -18,6 +18,7 @@ public:
 
     matrix(int rows, int cols);
     matrix(t_point *point);
+    ~matrix();
 
     void setPos(int row, int col, GLdouble val);
     void setRow(int row, GLdouble *vals);

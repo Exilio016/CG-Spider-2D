@@ -76,3 +76,9 @@ t_point *matrix::toPoint(){
 GLdouble matrix::getPos(int row, int col) {
     return this->m[row][col];
 }
+
+matrix::~matrix() {
+    for(int i = 0; i < rows; i++)
+        delete(m[i]);
+    delete(m);
+}

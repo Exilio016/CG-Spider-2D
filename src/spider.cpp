@@ -107,7 +107,28 @@ void spider::transform_leg(matrix *transform, leg *m_leg){
         throw std::invalid_argument("Illegal transformation matrix!");
 
     matrix *orig = new matrix(m_leg->orig);
+    matrix *articulation = new matrix(m_leg->articulation);
+    matrix *end = new matrix(m_leg->end);
 
+    delete(m_leg->orig);
+    delete(m_leg->articulation);
+    delete(m_leg->end);
+
+    matrix *aux = transform->multiply(orig);
+    m_leg->orig = aux->toPoint();
+    delete(aux);
+
+    aux = transform->multiply(articulation);
+    m_leg->articulation = aux->toPoint();
+    delete(aux);
+
+    aux = transform->multiply(end);
+    m_leg->end = aux->toPoint();
+
+    delete(aux);
+    delete(orig);
+    delete(articulation);
+    delete(end);
 }
 
 void spider::rotate_spider(GLdouble angle) {
