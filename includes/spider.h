@@ -5,7 +5,6 @@
 #ifndef ARANHA2D_SPIDER_H
 #define ARANHA2D_SPIDER_H
 
-
 #include <GL/gl.h>
 
 class spider {
@@ -48,8 +47,15 @@ private:
 
 public:
     spider(t_point *pos);
+  
+    void move_spider(GLint, GLint);
+    void rotate_spider(GLdouble);
+  
+    t_point aux_rotate(GLdouble, t_point);
+  
     void animate();
     void draw();
+
 
 
 };
