@@ -34,6 +34,7 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
    //GLUT_DOWN
    //GLUT_UP
    if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
+      glutPostRedisplay();
       s->move_spider(x, y);
       s->draw();
    }
