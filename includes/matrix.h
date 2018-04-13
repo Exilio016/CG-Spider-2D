@@ -12,9 +12,10 @@
 class matrix {
 private:
     GLdouble **m;
-    int rows, cols;
 
 public:
+    int rows, cols;
+
     matrix(int rows, int cols);
     matrix(t_point *point);
 

@@ -7,6 +7,7 @@
 
 #include <GL/gl.h>
 #include "types.h"
+#include "matrix.h"
 
 class spider {
 public:
@@ -37,13 +38,13 @@ public:
     void move_spider(GLint, GLint);
     void rotate_spider(GLdouble);
   
-    t_point aux_rotate(GLdouble, t_point);
+    t_point *aux_rotate(GLdouble, t_point*);
   
     void animate();
     void draw();
 
 
-
+    void transform_leg(matrix *, leg *);
 };
 
 

@@ -72,3 +72,7 @@ t_point *matrix::toPoint(){
     point->x = this->m[0][0];
     point->y = this->m[1][0];
 }
+
+GLdouble matrix::getPos(int row, int col) {
+    return this->m[row][col];
+}

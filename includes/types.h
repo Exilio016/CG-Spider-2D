@@ -11,14 +11,14 @@ typedef struct {
 }t_point;
 
 typedef struct {
-    t_point center;
+    t_point *center;
     double radius;
 }circle;
 
 typedef struct {
-    t_point orig;
-    t_point articulation;
-    t_point end;
+    t_point *orig;
+    t_point *articulation;
+    t_point *end;
 }leg;
 
 #endif //ARANHA2D_TYPES_H
