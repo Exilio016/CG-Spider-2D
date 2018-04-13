@@ -5,6 +5,8 @@
 
 const GLint WINDOWS_WIDTH = 800, WINDOWS_HEIGHT = 600;
 
+spider *s;
+
 void draw_circle(spider::circle *circle){
    int n_lines = 100;
    GLdouble x,y;
@@ -57,7 +59,7 @@ void callback_display(){
    p->x = WINDOWS_WIDTH/2;
    p->y = WINDOWS_HEIGHT/2;
 
-   spider *s = new spider(p);
+   s = new spider(p);
    glClear(GL_COLOR_BUFFER_BIT);
    draw_spider(s);
    glutSwapBuffers();
@@ -69,14 +71,15 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
    //GLUT_DOWN
    //GLUT_UP
    if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
-      std::cout<<"click\n";
+      s->move_spider(x, y);
+      draw_spider(s);
    }
 }
 
 /*Function that is called if the mouse is pressed
  * and moving */
 void mouseDrag(GLint x, GLint y) {
-   std::cout<<"drag x:"<<x<<" y:"<<y<<"\n";
+   //std::cout<<"drag x:"<<x<<" y:"<<y<<"\n";
 }
 
 int main(int argc, char *argv[]){
