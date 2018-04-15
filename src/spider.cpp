@@ -14,10 +14,10 @@ enum {
    Y
 };
 
-#define TORAXSIZE 80
-#define EYESIZE 6
-#define LEGSIZE 90
-#define ARTICANG 7.5
+#define TORAXSIZE 40
+#define EYESIZE 3
+#define LEGSIZE 45
+#define ARTICANG 3.75
 #define MAXIT 10;
 
 spider::spider(t_point *pos) {
@@ -241,8 +241,8 @@ spider::~spider() {
     }
     delete (this->abdomen);
     delete (this->cephalothorax);
-    delete(this->eyes);
-    delete (this->legs);
+    delete[] (this->eyes);
+    delete[] (this->legs);
 }
 
 int spider::find_direction(t_point *point) {
@@ -254,7 +254,7 @@ int spider::find_direction(t_point *point) {
 
     t->setRow(0, new GLdouble[3]{1, 0 ,-x});
     t->setRow(1, new GLdouble[3]{0, 1 ,-y});
-    t->setRow(2, new GLdouble[3]{0, 0 ,0});
+    t->setRow(2, new GLdouble[3]{0, 0 ,1});
 
     r->setRow(0, new GLdouble[3]{cos(-ang), -sin(-ang), x - x*cos(-ang) + y*sin(-ang)});
     r->setRow(1, new GLdouble[3]{sin(-ang),  cos(-ang), y - y*cos(-ang) - x*sin(-ang)});
@@ -268,14 +268,17 @@ int spider::find_direction(t_point *point) {
 
     aux = t->multiply(p);
     delete(p);
-    if(aux->getPos(0, 0) == 0) {
-        delete(aux);
+    t_point *auxp = aux->toPoint();
+    delete(aux);
+
+    if(auxp->x == 0) {
+        delete(auxp);
         return 0;
     }
-    if(aux->getPos(1, 0) > 0) {
-        delete(aux);
+    if(auxp->x > 0) {
+        delete(auxp);
         return 1;
     }
-    delete(aux);
+    delete(auxp);
     return -1;
 }
