@@ -27,6 +27,7 @@ private:
 
     state currentState;
     state oldState;
+    t_point *point;
     double ang;
     int it;
 
@@ -37,7 +38,7 @@ public:
     explicit spider(t_point *pos);
     ~spider();
   
-    void move_spider(GLint, GLint);
+    void move_spider();
     void rotate_spider(GLdouble);
   
     t_point *aux_rotate(GLdouble, t_point*);
@@ -49,6 +50,11 @@ public:
 
     void transform_leg(matrix *, leg *);
 
+    void aux_move();
+
+    void transform(matrix *pMatrix);
+
+    void setDestination(t_point *p);
 };
 
 

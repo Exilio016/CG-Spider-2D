@@ -4,6 +4,8 @@
 #include <matrix.h>
 #include <iostream>
 
+#define FRAMES 24
+
 const GLint WINDOWS_WIDTH = 800, WINDOWS_HEIGHT = 600;
 
 spider *s;
@@ -34,8 +36,12 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
    //GLUT_DOWN
    //GLUT_UP
    if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
+
+      t_point *p = new t_point;
+      p->x = x; p->y = y;
+      s->setDestination(p);
       glutPostRedisplay();
-      s->move_spider(x, y);
+      s->move_spider();
       s->draw();
    }
 }
@@ -45,6 +51,17 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
  * and moving */
 void mouseDrag(GLint x, GLint y) {
    //std::cout<<"drag x:"<<x<<" y:"<<y<<"\n";
+}
+
+void move_spider(int ref){
+    if(ref == 0)
+        return;
+
+    glutPostRedisplay();
+    s->animate();
+    s->move_spider();
+    s->draw();
+    glutTimerFunc(1000/FRAMES, move_spider, 1);
 }
 
 int main(int argc, char *argv[]){
@@ -63,6 +80,7 @@ int main(int argc, char *argv[]){
 
    glutMouseFunc(mouseClick);
    glutMotionFunc(mouseDrag);
+   glutTimerFunc(1000/FRAMES, move_spider, 1);
 
    glutMainLoop();
 

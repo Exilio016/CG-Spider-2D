@@ -5,6 +5,8 @@
 #ifndef ARANHA2D_TYPES_H
 #define ARANHA2D_TYPES_H
 
+#include <GL/glut.h>
+
 typedef struct {
     GLdouble x;
     GLdouble y;
@@ -21,5 +23,6 @@ typedef struct {
     t_point *end;
 }leg;
 
+bool compareDouble(double a ,double b);
 #endif //ARANHA2D_TYPES_H
 //

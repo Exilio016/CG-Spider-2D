@@ -7,6 +7,7 @@
 #include <iostream>
 #include <matrix.h>
 #include <types.h>
+#include <limits>
 #include "spider.h"
 
 enum {
@@ -26,7 +27,11 @@ spider::spider(t_point *pos) {
    this->legs = new leg*[8];
    this->eyes = new circle*[2];
    this->center = pos;
+   this->point = new t_point;
    this->ang = 0;
+
+   this->point->x = pos->x;
+   this->point->y = pos->y;
 
    this->abdomen->center = new t_point;
    this->abdomen->center->x = pos->x;
@@ -167,16 +172,38 @@ void spider::rotate_spider(GLdouble angle) {
    this->ang += angle;
 }
 
-void spider::move_spider(GLint x, GLint y) {
-   while (this->center->x != x && this->center-> y != y) {
-       t_point *p = new t_point;
-       p->x = x; p->y = y;
-       int signal = find_direction(p);
+void spider::aux_move(){
+    matrix *t = new matrix(3,3);
+    int tx, ty;
 
-      std::cout<<"click\n";
-      rotate_spider(signal*M_PI/4);
-      break;
-   }
+    if((this->cephalothorax->center->y - this->center->y) > 0)
+        ty = TORAXSIZE/3;
+    else if((this->cephalothorax->center->y - this->center->y) == 0)
+        ty = 0;
+    else
+        ty = -TORAXSIZE/3;
+
+    if((this->cephalothorax->center->x - this->center->x) > 0)
+        tx = TORAXSIZE/3;
+    else if((this->cephalothorax->center->x - this->center->x) == 0)
+        tx = 0;
+    else
+        tx = -TORAXSIZE/3;
+
+    t->setRow(0, new GLdouble[3]{1, 0, tx});
+    t->setRow(1, new GLdouble[3]{0, 1, ty});
+    t->setRow(2, new GLdouble[3]{0, 0, 1});
+
+    this->transform(t);
+}
+
+void spider::move_spider() {
+    if(compareDouble(center->x, point->x) && compareDouble(center->y, point->y))
+        return;
+
+    int signal = find_direction(point);
+    rotate_spider(signal*M_PI/4);
+    this->aux_move();
 }
 
 void spider::draw_circle(circle *circle){
@@ -281,4 +308,34 @@ int spider::find_direction(t_point *point) {
     }
     delete(auxp);
     return -1;
+}
+
+void aux_transform(matrix *m, t_point **point){
+    matrix *p = new matrix(*point);
+    matrix *aux = m->multiply(p);
+
+    delete(*point);
+    *point = aux->toPoint();
+    delete(aux);
+    delete(p);
+
+}
+
+void spider::transform(matrix *pMatrix) {
+    aux_transform(pMatrix, &this->center);
+    aux_transform(pMatrix, &this->cephalothorax->center);
+    aux_transform(pMatrix, &this->abdomen->center);
+    aux_transform(pMatrix, &this->eyes[0]->center);
+    aux_transform(pMatrix, &this->eyes[1]->center);
+
+    for(int i = 0; i < 8; i++){
+        this->transform_leg(pMatrix, this->legs[i]);
+    }
+}
+
+void spider::setDestination(t_point *p) {
+    if(p != nullptr){
+        delete(point);
+        point = p;
+    }
 }
