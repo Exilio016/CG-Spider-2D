@@ -31,12 +31,12 @@ matrix::matrix(t_point *point){
 }
 
 matrix *matrix::multiply(matrix *m2) {
-    if(m2 == nullptr || (this->rows != m2->cols))
+    if(m2 == nullptr || (this->cols != m2->rows))
         return nullptr;
 
-    matrix *ret = new matrix(m2->rows, this->cols);
-    for(int i = 0; i < m2->rows; i++){
-        for(int j = 0; j < this->cols; j++){
+    matrix *ret = new matrix(this->rows, m2->cols);
+    for(int i = 0; i < this->rows; i++){
+        for(int j = 0; j < m2->cols; j++){
             ret->m[i][j] = 0;
             for(int k = 0; k < this->cols; k++){
                 ret->m[i][j] += this->m[i][k] * m2->m[k][j];
@@ -82,3 +82,4 @@ matrix::~matrix() {
         delete(m[i]);
     delete(m);
 }
+

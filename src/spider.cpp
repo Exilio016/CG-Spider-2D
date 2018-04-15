@@ -26,6 +26,7 @@ spider::spider(t_point *pos) {
    this->legs = new leg*[8];
    this->eyes = new circle*[2];
    this->center = pos;
+   this->ang = 0;
 
    this->abdomen->center = new t_point;
    this->abdomen->center->x = pos->x;
@@ -163,12 +164,17 @@ void spider::rotate_spider(GLdouble angle) {
       this->legs[i]->end->x = aux->x;
       this->legs[i]->end->y = aux->y;
    }
+   this->ang += angle;
 }
 
 void spider::move_spider(GLint x, GLint y) {
    while (this->center->x != x && this->center-> y != y) {
+       t_point *p = new t_point;
+       p->x = x; p->y = y;
+       int signal = find_direction(p);
+
       std::cout<<"click\n";
-      rotate_spider(M_PI/4);
+      rotate_spider(signal*M_PI/4);
       break;
    }
 }
@@ -217,4 +223,59 @@ void spider::draw(){
 void spider::animate() {
 
 
+}
+
+spider::~spider() {
+    delete (this->abdomen->center);
+    delete (this->cephalothorax->center);
+    delete(this->eyes[0]->center);
+    delete(this->eyes[1]->center);
+    delete(this->eyes[0]);
+    delete(this->eyes[1]);
+
+    for(int i = 0; i < 8; i++){
+        delete(this->legs[i]->orig);
+        delete(this->legs[i]->articulation);
+        delete(this->legs[i]->end);
+        delete (this->legs[i]);
+    }
+    delete (this->abdomen);
+    delete (this->cephalothorax);
+    delete(this->eyes);
+    delete (this->legs);
+}
+
+int spider::find_direction(t_point *point) {
+    matrix *p = new matrix(point);
+    matrix *t = new matrix(3, 3);
+    matrix *r = new matrix(3, 3);
+    GLdouble x = this->center->x;
+    GLdouble y = this->center->y;
+
+    t->setRow(0, new GLdouble[3]{1, 0 ,-x});
+    t->setRow(1, new GLdouble[3]{0, 1 ,-y});
+    t->setRow(2, new GLdouble[3]{0, 0 ,0});
+
+    r->setRow(0, new GLdouble[3]{cos(-ang), -sin(-ang), x - x*cos(-ang) + y*sin(-ang)});
+    r->setRow(1, new GLdouble[3]{sin(-ang),  cos(-ang), y - y*cos(-ang) - x*sin(-ang)});
+    r->setRow(2, new GLdouble[3]{0,         0 ,       1});
+
+    matrix *aux = r->multiply(t);
+
+    delete(t);
+    delete(r);
+    t = aux;
+
+    aux = t->multiply(p);
+    delete(p);
+    if(aux->getPos(0, 0) == 0) {
+        delete(aux);
+        return 0;
+    }
+    if(aux->getPos(1, 0) > 0) {
+        delete(aux);
+        return 1;
+    }
+    delete(aux);
+    return -1;
 }

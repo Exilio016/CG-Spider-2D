@@ -27,24 +27,28 @@ private:
 
     state currentState;
     state oldState;
+    double ang;
     int it;
 
     void draw_circle(circle *c);
     void draw_leg(leg *l);
 
 public:
-    spider(t_point *pos);
+    explicit spider(t_point *pos);
+    ~spider();
   
     void move_spider(GLint, GLint);
     void rotate_spider(GLdouble);
   
     t_point *aux_rotate(GLdouble, t_point*);
+    int find_direction(t_point *point);
   
     void animate();
     void draw();
 
 
     void transform_leg(matrix *, leg *);
+
 };
 
 
