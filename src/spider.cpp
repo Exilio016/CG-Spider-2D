@@ -178,14 +178,14 @@ void spider::aux_move(){
 
     if((this->cephalothorax->center->y - this->center->y) > 0)
         ty = TORAXSIZE/3;
-    else if((this->cephalothorax->center->y - this->center->y) == 0)
+    else if(compareDouble(this->cephalothorax->center->y, this->center->y))
         ty = 0;
     else
         ty = -TORAXSIZE/3;
 
     if((this->cephalothorax->center->x - this->center->x) > 0)
         tx = TORAXSIZE/3;
-    else if((this->cephalothorax->center->x - this->center->x) == 0)
+    else if(compareDouble(this->cephalothorax->center->x ,this->center->x))
         tx = 0;
     else
         tx = -TORAXSIZE/3;
