@@ -174,22 +174,25 @@ void spider::rotate_spider(GLdouble angle) {
 
 void spider::aux_move(){
     matrix *t = new matrix(3,3);
-    int tx, ty;
+    GLdouble tx, ty;
+    tx = 0; ty = -TORAXSIZE/3;
+    
+    t_point *point = new t_point;
+    point->x = tx; point->y = ty;
 
-    if((this->cephalothorax->center->y - this->center->y) > 0)
-        ty = TORAXSIZE/3;
-    else if(compareDouble(this->cephalothorax->center->y, this->center->y))
-        ty = 0;
-    else
-        ty = -TORAXSIZE/3;
+    matrix *ap = new matrix(point);
+    matrix *ar = new matrix(3, 3);
+    ar->setRow(0, new GLdouble[3]{cos(ang), -sin(ang), 0});
+    ar->setRow(1, new GLdouble[3]{sin(ang),  cos(ang), 0});
+    ar->setRow(2, new GLdouble[3]{0,         0 ,       1});
 
-    if((this->cephalothorax->center->x - this->center->x) > 0)
-        tx = TORAXSIZE/3;
-    else if(compareDouble(this->cephalothorax->center->x ,this->center->x))
-        tx = 0;
-    else
-        tx = -TORAXSIZE/3;
-   
+    matrix *aux = ar->multiply(ap);
+    delete(point);
+    point = aux->toPoint();
+
+    tx = point->x; ty = point->y;
+    delete(point);
+
     t->setRow(0, new GLdouble[3]{1, 0, tx});
     t->setRow(1, new GLdouble[3]{0, 1, ty});
     t->setRow(2, new GLdouble[3]{0, 0, 1});
@@ -301,11 +304,12 @@ int spider::find_direction(t_point *point) {
     t_point *auxp = aux->toPoint();
     delete(aux);
    
+    if(compareDouble(auxp->x, 0)){
+       delete(auxp);
+       return 1;
+    }
+
     if( fabs(auxp->x) <= TORAXSIZE) {
-       if((auxp->y) < TORAXSIZE + TORAXSIZE/2){
-        delete(auxp);
-        return 1;
-       }
        delete(auxp);
        return 0;
     }
