@@ -41,8 +41,8 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
       p->x = x; p->y = y;
       s->setDestination(p);
       glutPostRedisplay();
-      s->move_spider();
-      s->draw();   --> deixar na func de mover?
+      //s->move_spider();
+      s->draw();
    }
 }
 
@@ -50,6 +50,13 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
 /*Function that is called if the mouse is pressed
  * and moving */
 void mouseDrag(GLint x, GLint y) {
+   
+      t_point *p = new t_point;
+      p->x = x; p->y = y;
+      s->setDestination(p);
+      glutPostRedisplay();
+      //s->move_spider();
+      s->draw();
    //std::cout<<"drag x:"<<x<<" y:"<<y<<"\n";
 }
 
