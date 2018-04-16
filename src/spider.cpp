@@ -202,7 +202,7 @@ void spider::move_spider() {
         return;
 
     int signal = find_direction(point);
-    rotate_spider(signal*M_PI/4);
+    rotate_spider(signal*M_PI/8);
     this->aux_move();
 }
 
@@ -287,7 +287,7 @@ int spider::find_direction(t_point *point) {
     r->setRow(1, new GLdouble[3]{sin(-ang),  cos(-ang), y - y*cos(-ang) - x*sin(-ang)});
     r->setRow(2, new GLdouble[3]{0,         0 ,       1});
 
-    matrix *aux = r->multiply(t);
+    matrix *aux = t->multiply(r);
 
     delete(t);
     delete(r);
@@ -298,11 +298,11 @@ int spider::find_direction(t_point *point) {
     t_point *auxp = aux->toPoint();
     delete(aux);
 
-    if(auxp->x == 0) {
+    if( fabs(auxp->x) <= TORAXSIZE + LEGSIZE) {
         delete(auxp);
         return 0;
     }
-    if(auxp->x > 0) {
+    if(auxp->x > TORAXSIZE + LEGSIZE) {
         delete(auxp);
         return 1;
     }
