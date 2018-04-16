@@ -87,7 +87,7 @@ spider::spider(t_point *pos) {
 
 
       if(k == 1 || k == 5) {
-         this->legs[i]->articulation->y = this->legs[i]->orig->y - 3 * LEGSIZE / 2;
+         this->legs[i]->articulation->y = this->legs[i]->orig->y - LEGSIZE;
          this->legs[i]->end->y = this->legs[i]->articulation->y - ARTICANG;
       }
 
