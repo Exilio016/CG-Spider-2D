@@ -198,12 +198,14 @@ void spider::aux_move(){
 }
 
 void spider::move_spider() {
-    if(compareDouble(center->x, point->x) && compareDouble(center->y, point->y))
+    if((center->x < point->x+TORAXSIZE) && (center->y < point->y + TORAXSIZE ) &&
+      (center->x > point->x-TORAXSIZE) && (center->y > point->y - TORAXSIZE ))
         return;
 
     int signal = find_direction(point);
     rotate_spider(signal*M_PI/8);
     this->aux_move();
+    this->draw();
 }
 
 void spider::draw_circle(circle *circle){
