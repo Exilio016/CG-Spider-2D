@@ -4,23 +4,27 @@
 #include <matrix.h>
 #include <iostream>
 
+#define FRAMES 24
+
 const GLint WINDOWS_WIDTH = 800, WINDOWS_HEIGHT = 600;
 
 spider *s;
+
 
 void init(){
    glClearColor(1, 1, 1, 1);
    glMatrixMode(GL_PROJECTION);
 
-   gluOrtho2D(0, WINDOWS_WIDTH, WINDOWS_HEIGHT, 0);
-}
-
-void callback_display(){
-   spider::t_point *p = new spider::t_point;
+   t_point *p = new t_point;
    p->x = WINDOWS_WIDTH/2;
    p->y = WINDOWS_HEIGHT/2;
 
    s = new spider(p);
+
+   gluOrtho2D(0, WINDOWS_WIDTH, WINDOWS_HEIGHT, 0);
+}
+
+void callback_display(){
    glClear(GL_COLOR_BUFFER_BIT);
    s->draw();
    glutSwapBuffers();
@@ -32,8 +36,12 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
    //GLUT_DOWN
    //GLUT_UP
    if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
-      s->move_spider(x, y);
-   glClear(GL_COLOR_BUFFER_BIT);
+
+      t_point *p = new t_point;
+      p->x = x; p->y = y;
+      s->setDestination(p);
+      glutPostRedisplay();
+      s->move_spider();
       s->draw();
    }
 }
@@ -43,6 +51,17 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
  * and moving */
 void mouseDrag(GLint x, GLint y) {
    //std::cout<<"drag x:"<<x<<" y:"<<y<<"\n";
+}
+
+void move_spider(int ref){
+    if(ref == 0)
+        return;
+
+    glutPostRedisplay();
+    s->animate();
+    s->move_spider();
+    s->draw();
+    glutTimerFunc(1000/FRAMES, move_spider, 1);
 }
 
 int main(int argc, char *argv[]){
@@ -61,8 +80,10 @@ int main(int argc, char *argv[]){
 
    glutMouseFunc(mouseClick);
    glutMotionFunc(mouseDrag);
+   glutTimerFunc(1000/FRAMES, move_spider, 1);
 
    glutMainLoop();
 
    return 0;
 }
+

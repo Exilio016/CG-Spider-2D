@@ -6,55 +6,56 @@
 #define ARANHA2D_SPIDER_H
 
 #include <GL/gl.h>
+#include "types.h"
+#include "matrix.h"
 
 class spider {
-   public:
-      typedef struct {
-         GLdouble x;
-         GLdouble y;
-      } t_point;
+public:
 
-      typedef struct {
-         t_point center;
-         double radius;
-      } circle;
+    circle **eyes;
+    circle *cephalothorax;
+    circle *abdomen;
+    leg **legs;
+    t_point *center;
 
-      typedef struct {
-         t_point orig;
-         t_point articulation;
-         t_point end;
-      } leg;
+private:
+    typedef enum {
+        stopped,
+        walking_left,
+        walking_dir
+    }state;
 
-      circle **eyes;
-      circle *cephalothorax;
-      circle *abdomen;
-      leg **legs;
-      t_point *center;
+    state currentState;
+    state oldState;
+    t_point *point;
+    double ang;
+    int it;
 
-   private:
-      typedef enum {
-         stopped,
-         walking_left,
-         walking_dir
-      } state;
+    void draw_circle(circle *c);
+    void draw_leg(leg *l);
 
-      state currentState;
-      state oldState;
-      int it;
+public:
+    explicit spider(t_point *pos);
+    ~spider();
+  
+    void move_spider();
+    void rotate_spider(GLdouble);
+  
+    t_point *aux_rotate(GLdouble, t_point*);
+    int find_direction(t_point *point);
+  
+    void animate();
+    void draw();
 
-      void draw_circle(circle *c);
-      void draw_leg(leg *l);
 
-   public:
-      spider(t_point *pos);
+    void transform_leg(matrix *, leg *);
 
-      void move_spider(GLint, GLint);
+    void aux_move();
 
-      void rotate_spider(GLdouble);
-      t_point aux_rotate(GLdouble, t_point);
+    void transform(matrix *pMatrix);
 
-      void animate();
-      void draw();
+    void setDestination(t_point *p);
 };
 
-#endif
+
+#endif //ARANHA2D_SPIDER_H

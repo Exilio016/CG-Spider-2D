@@ -15,7 +15,7 @@ matrix::matrix(int rows, int cols){
     }
 }
 
-matrix::matrix(spider::t_point *point){
+matrix::matrix(t_point *point){
     this->rows = 3; this->cols = 1;
     this->m = new GLdouble* [3];
 
@@ -31,12 +31,12 @@ matrix::matrix(spider::t_point *point){
 }
 
 matrix *matrix::multiply(matrix *m2) {
-    if(m2 == nullptr || (this->rows != m2->cols))
+    if(m2 == nullptr || (this->cols != m2->rows))
         return nullptr;
 
-    matrix *ret = new matrix(m2->rows, this->cols);
-    for(int i = 0; i < m2->rows; i++){
-        for(int j = 0; j < this->cols; j++){
+    matrix *ret = new matrix(this->rows, m2->cols);
+    for(int i = 0; i < this->rows; i++){
+        for(int j = 0; j < m2->cols; j++){
             ret->m[i][j] = 0;
             for(int k = 0; k < this->cols; k++){
                 ret->m[i][j] += this->m[i][k] * m2->m[k][j];
@@ -64,11 +64,22 @@ void matrix::setRow(int row, GLdouble *vals) {
     this->m[row] = vals;
 }
 
-spider::t_point *matrix::toPoint(){
+t_point *matrix::toPoint(){
     if(this->rows != 3 && this->cols != 1)
         throw std::invalid_argument("Impossible to convert this matrix!");
 
-    spider::t_point *point = new spider::t_point;
+    t_point *point = new t_point;
     point->x = this->m[0][0];
     point->y = this->m[1][0];
 }
+
+GLdouble matrix::getPos(int row, int col) {
+    return this->m[row][col];
+}
+
+matrix::~matrix() {
+    for(int i = 0; i < rows; i++)
+        delete[] m[i];
+    delete[] m;
+}
+

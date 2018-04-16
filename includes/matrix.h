@@ -7,24 +7,29 @@
 
 
 #include <GL/gl.h>
-#include "spider.h"
+#include "types.h"
 
 class matrix {
 private:
     GLdouble **m;
-    int rows, cols;
 
 public:
+    int rows, cols;
+
     matrix(int rows, int cols);
-    matrix(spider::t_point *point);
+    matrix(t_point *point);
+    ~matrix();
 
     void setPos(int row, int col, GLdouble val);
     void setRow(int row, GLdouble *vals);
 
     matrix *multiply(matrix *m2);
 
-    spider::t_point *toPoint();
+    t_point *toPoint();
+
+    GLdouble getPos(int row, int col);
 };
 
 
 #endif //ARANHA2D_MATRIX_H
+//
