@@ -8,7 +8,6 @@ const GLint WINDOWS_WIDTH = 800, WINDOWS_HEIGHT = 600;
 
 spider *s;
 
-
 void init(){
    glClearColor(1, 1, 1, 1);
    glMatrixMode(GL_PROJECTION);
@@ -23,7 +22,7 @@ void callback_display(){
 
    s = new spider(p);
    glClear(GL_COLOR_BUFFER_BIT);
-   draw_spider(s);
+   s->draw();
    glutSwapBuffers();
 }
 
@@ -34,6 +33,7 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
    //GLUT_UP
    if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
       s->move_spider(x, y);
+   glClear(GL_COLOR_BUFFER_BIT);
       s->draw();
    }
 }

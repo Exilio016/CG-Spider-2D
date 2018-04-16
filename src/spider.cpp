@@ -7,15 +7,10 @@
 #include <iostream>
 #include "spider.h"
 
-enum {
-   X,
-   Y
-};
-
-#define TORAXSIZE 80
-#define EYESIZE 6
-#define LEGSIZE 90
-#define ARTICANG 7.5
+#define TORAXSIZE 25
+#define EYESIZE 2.5
+#define LEGSIZE 25
+#define ARTICANG 5
 #define MAXIT 10;
 
 spider::spider(spider::t_point *pos) {
@@ -33,15 +28,15 @@ spider::spider(spider::t_point *pos) {
    this->cephalothorax->center.y = pos->y - TORAXSIZE/2;
    this->cephalothorax->radius = TORAXSIZE/2;
 
-   this->eyes[X] = new circle;
-   this->eyes[X]->center.x = pos->x - EYESIZE;
-   this->eyes[X]->center.y = pos->y - TORAXSIZE + EYESIZE;
-   this->eyes[X]->radius = EYESIZE;
+   this->eyes[0] = new circle;
+   this->eyes[0]->center.x = pos->x - EYESIZE;
+   this->eyes[0]->center.y = pos->y - TORAXSIZE + EYESIZE;
+   this->eyes[0]->radius = EYESIZE;
 
-   this->eyes[Y] = new circle;
-   this->eyes[Y]->center.x = pos->x + EYESIZE;
-   this->eyes[Y]->center.y = pos->y - TORAXSIZE + EYESIZE;
-   this->eyes[Y]->radius = EYESIZE;
+   this->eyes[1] = new circle;
+   this->eyes[1]->center.x = pos->x + EYESIZE;
+   this->eyes[1]->center.y = pos->y - TORAXSIZE + EYESIZE;
+   this->eyes[1]->radius = EYESIZE;
 
    int k = 0;
    for(int i = 0; i < 8; i++){
@@ -103,13 +98,13 @@ void spider::rotate_spider(GLdouble angle) {
    this->cephalothorax->center.x = aux.x;
    this->cephalothorax->center.y = aux.y;
 
-   aux = aux_rotate(angle, this->eyes[X]->center); 
-   this->eyes[X]->center.x = aux.x;
-   this->eyes[X]->center.y = aux.y;
+   aux = aux_rotate(angle, this->eyes[0]->center); 
+   this->eyes[0]->center.x = aux.x;
+   this->eyes[0]->center.y = aux.y;
 
-   aux = aux_rotate(angle, this->eyes[Y]->center); 
-   this->eyes[Y]->center.x = aux.x;
-   this->eyes[Y]->center.y = aux.y;
+   aux = aux_rotate(angle, this->eyes[1]->center); 
+   this->eyes[1]->center.x = aux.x;
+   this->eyes[1]->center.y = aux.y;
 
    for(int i = 0; i < 8; i++) {
       aux = aux_rotate(angle, this->legs[i]->orig); 
@@ -176,6 +171,5 @@ void spider::draw(){
 }
 
 void spider::animate() {
-
 
 }
