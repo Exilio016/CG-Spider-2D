@@ -302,7 +302,7 @@ int spider::find_direction(t_point *point) {
     delete(aux);
    
     if( fabs(auxp->x) <= TORAXSIZE) {
-       if((auxp->y) < 2*TORAXSIZE){
+       if((auxp->y) < TORAXSIZE + TORAXSIZE/2){
         delete(auxp);
         return 1;
        }
