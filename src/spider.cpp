@@ -175,7 +175,7 @@ void spider::rotate_spider(GLdouble angle) {
 void spider::aux_move(){
     matrix *t = new matrix(3,3);
     int tx, ty;
-
+/*
     if((this->cephalothorax->center->y - this->center->y) > 0)
         ty = TORAXSIZE/3;
     else if(compareDouble(this->cephalothorax->center->y, this->center->y))
@@ -189,7 +189,10 @@ void spider::aux_move(){
         tx = 0;
     else
         tx = -TORAXSIZE/3;
-
+*/
+   tx = TORAXSIZE/3 * cos(this->ang);
+   ty = TORAXSIZE/3 * sin(this->ang);
+   
     t->setRow(0, new GLdouble[3]{1, 0, tx});
     t->setRow(1, new GLdouble[3]{0, 1, ty});
     t->setRow(2, new GLdouble[3]{0, 0, 1});
