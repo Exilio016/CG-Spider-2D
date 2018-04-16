@@ -198,7 +198,10 @@ void spider::aux_move(){
 }
 
 void spider::move_spider() {
-    if(compareDouble(center->x, point->x) && compareDouble(center->y, point->y))
+
+    if((center->x < point->x+TORAXSIZE) && (center->y < point->y + TORAXSIZE ) &&
+      (center->x > point->x-TORAXSIZE) && (center->y > point->y - TORAXSIZE ))
+
         return;
 
     int signal = find_direction(point);
@@ -298,11 +301,11 @@ int spider::find_direction(t_point *point) {
     t_point *auxp = aux->toPoint();
     delete(aux);
 
-    if( fabs(auxp->x) <= TORAXSIZE + LEGSIZE) {
+    if( fabs(auxp->x) <= TORAXSIZE) {
         delete(auxp);
         return 0;
     }
-    if(auxp->x > TORAXSIZE + LEGSIZE) {
+    if(auxp->x > TORAXSIZE) {
         delete(auxp);
         return 1;
     }

@@ -42,7 +42,7 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
       s->setDestination(p);
       glutPostRedisplay();
       s->move_spider();
-      s->draw();
+      s->draw();   --> deixar na func de mover?
    }
 }
 
