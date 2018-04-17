@@ -238,7 +238,6 @@ void spider::draw_leg(leg *leg){
     glVertex2d(leg->end->x, leg->end->y);
     glEnd();
     glFlush();
-
 }
 
 void spider::draw(){
@@ -254,8 +253,7 @@ void spider::draw(){
 }
 
 void spider::animate() {
-
-
+    //TODO implements the legs animation
 }
 
 spider::~spider() {
