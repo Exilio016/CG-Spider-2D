@@ -10,15 +10,14 @@
 #include "matrix.h"
 
 class spider {
-public:
 
+private:
     circle **eyes;
     circle *cephalothorax;
     circle *abdomen;
     leg **legs;
     t_point *center;
 
-private:
     typedef enum {
         stopped,
         walking_left,
