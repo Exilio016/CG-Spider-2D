@@ -27,11 +27,11 @@ spider::spider(t_point *pos) {
    this->legs = new leg*[8];
    this->eyes = new circle*[2];
    this->center = pos;
-   this->point = new t_point;
+   this->destination = new t_point;
    this->ang = 0;
 
-   this->point->x = pos->x;
-   this->point->y = pos->y;
+   this->destination->x = pos->x;
+   this->destination->y = pos->y;
 
    this->abdomen->center = new t_point;
    this->abdomen->center->x = pos->x;
@@ -202,12 +202,12 @@ void spider::aux_move(){
 
 void spider::move_spider() {
 
-    if((center->x < point->x+TORAXSIZE) && (center->y < point->y + TORAXSIZE ) &&
-      (center->x > point->x-TORAXSIZE) && (center->y > point->y - TORAXSIZE ))
+    if((center->x < destination->x+TORAXSIZE) && (center->y < destination->y + TORAXSIZE ) &&
+      (center->x > destination->x-TORAXSIZE) && (center->y > destination->y - TORAXSIZE ))
 
         return;
 
-    int signal = find_direction(point);
+    int signal = find_direction(destination);
     rotate_spider(signal*M_PI/8);
     this->aux_move();
 }
@@ -344,7 +344,7 @@ void spider::transform(matrix *pMatrix) {
 
 void spider::setDestination(t_point *p) {
     if(p != nullptr){
-        delete(point);
-        point = p;
+        delete(destination);
+        destination = p;
     }
 }

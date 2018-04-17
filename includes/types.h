@@ -23,6 +23,9 @@ typedef struct {
     t_point *end;
 }leg;
 
+/**
+ * function that compare two doubles and return true if they are equal
+ */
 bool compareDouble(double a ,double b);
 #endif //ARANHA2D_TYPES_H
 //

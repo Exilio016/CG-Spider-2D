@@ -27,33 +27,82 @@ private:
 
     state currentState;
     state oldState;
-    t_point *point;
+    t_point *destination;
     double ang;
-    int it;
 
+    /**
+     * Method that draws on the screen a circle
+     * @param c - the circle you wants to draw
+     */
     void draw_circle(circle *c);
+
+    /**
+     * Method that draws non the screen a leg
+     * @param l - the leg you wants to draw
+     */
     void draw_leg(leg *l);
 
-public:
-    explicit spider(t_point *pos);
-    ~spider();
-  
-    void move_spider();
-    void rotate_spider(GLdouble);
-  
-    t_point *aux_rotate(GLdouble, t_point*);
+    //todo document this method
+    t_point *aux_rotate(GLdouble a, t_point* p);
+
+    /**
+     * Method that calculate if the spider will rotate to the left or the right
+     * based on a destination point
+     * @param point - the destination point
+     * @return 1 - to rotate to the left, -1 to the right and 0 to not rotate
+     */
     int find_direction(t_point *point);
-  
-    void animate();
-    void draw();
 
+    /**
+     * Method that calculates a transformation in a leg of the spider
+     * @param m - the transformation matrix
+     * @param l - the leg you wants to transform
+     */
+    void transform_leg(matrix *m, leg *l);
 
-    void transform_leg(matrix *, leg *);
+    /**
+     * Method that applies a transformation in the spider
+     * @param pMatrix - the transformation matrix
+     */
+    void transform(matrix *pMatrix);
 
     void aux_move();
 
-    void transform(matrix *pMatrix);
+public:
 
+    /**
+     * Constructor of the class, it sets the points of the spider
+     * @param pos - t_point with the coordinates you want to draws the spider
+     */
+    explicit spider(t_point *pos);
+    ~spider();
+
+    /**
+     * Method that moves the spider into the direction of the attribute t_point *destination
+     * The destination can be set with the method setDestination()
+     */
+    void move_spider();
+
+    /**
+     * Method that rotates the spider
+     * @param a - the angle of rotation, in radians
+     */
+    void rotate_spider(GLdouble a);
+
+    /**
+     * Method that animates the spider legs
+     */
+    void animate();
+
+    /**
+     * Method that draws the spider on the screen
+     */
+    void draw();
+
+    /**
+     * Method that sets the destination point of the spider
+     * @param p - the destination point
+     */
     void setDestination(t_point *p);
 };
 
