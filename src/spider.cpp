@@ -208,7 +208,7 @@ void spider::move_spider() {
         return;
 
     int signal = find_direction(destination);
-    rotate_spider(signal*M_PI/8);
+    rotate_spider(signal*M_PI/24);
     this->aux_move();
 }
 
