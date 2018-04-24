@@ -8,7 +8,7 @@
 
 const GLint WINDOWS_WIDTH = 800, WINDOWS_HEIGHT = 600;
 
-spider *s;
+Spider *s;
 
 
 void init(){
@@ -19,7 +19,7 @@ void init(){
    p->x = WINDOWS_WIDTH/2;
    p->y = WINDOWS_HEIGHT/2;
 
-   s = new spider(p);
+   s = new Spider(p);
 
    gluOrtho2D(0, WINDOWS_WIDTH, WINDOWS_HEIGHT, 0);
 }

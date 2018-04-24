@@ -19,9 +19,34 @@ enum {
 #define EYESIZE 3
 #define LEGSIZE 45
 #define ARTICANG 3.75
-#define MAXIT 10;
+#define MAXIT 3
 
-spider::spider(t_point *pos) {
+void scaleMatrix(double s, t_point *p, Matrix *m){
+    if(m != nullptr && m->rows == 3 && m->cols == 3){
+        m->setRow(0, new GLdouble[3]{s, 0, p->x * (1 - s)});
+        m->setRow(1, new GLdouble[3]{0, s, p->y * (1 - s)});
+        m->setRow(2, new GLdouble[3]{0, 0, 1});
+    }
+}
+
+void rotateMatrix(double ang, t_point *p, Matrix *m){
+    if(m != nullptr && m->rows == 3 && m->cols == 3) {
+        m->setRow(0, new GLdouble[3]{cos(ang), -sin(ang),  p->x - p->x * cos(ang) + p->y * sin(ang)});
+        m->setRow(1, new GLdouble[3]{sin(ang), cos(ang), p->y - p->y * cos(ang) - p->x * sin(ang)});
+        m->setRow(2, new GLdouble[3]{0, 0, 1});
+    }
+}
+
+void translateMatrix(t_point *t, Matrix *m){
+    if(m != nullptr && m->rows == 3 && m->cols == 3) {
+        m->setRow(0, new GLdouble[3]{1, 0 ,t->x});
+        m->setRow(1, new GLdouble[3]{0, 1 ,t->y});
+        m->setRow(2, new GLdouble[3]{0, 0 ,1});
+
+    }
+}
+
+Spider::Spider(t_point *pos) {
    this->abdomen = new circle;
    this->cephalothorax = new circle;
    this->legs = new leg*[8];
@@ -98,7 +123,7 @@ spider::spider(t_point *pos) {
    }
 }
 
-t_point *spider::aux_rotate(GLdouble angle, t_point *init) {
+t_point *Spider::aux_rotate(GLdouble angle, t_point *init) {
    t_point *result = new t_point;
    t_point *axis = (this->center);
    result->x = cos(angle) * init->x - sin(angle) * init->y +
@@ -108,19 +133,19 @@ t_point *spider::aux_rotate(GLdouble angle, t_point *init) {
    return result;
 }
 
-void spider::transform_leg(matrix *transform, leg *m_leg){
+void Spider::transform_leg(Matrix *transform, leg *m_leg){
     if(transform == nullptr || transform->rows != 3 || transform->cols != 3)
         throw std::invalid_argument("Illegal transformation matrix!");
 
-    matrix *orig = new matrix(m_leg->orig);
-    matrix *articulation = new matrix(m_leg->articulation);
-    matrix *end = new matrix(m_leg->end);
+    Matrix *orig = new Matrix(m_leg->orig);
+    Matrix *articulation = new Matrix(m_leg->articulation);
+    Matrix *end = new Matrix(m_leg->end);
 
     delete(m_leg->orig);
     delete(m_leg->articulation);
     delete(m_leg->end);
 
-    matrix *aux = transform->multiply(orig);
+    Matrix *aux = transform->multiply(orig);
     m_leg->orig = aux->toPoint();
     delete(aux);
 
@@ -137,7 +162,7 @@ void spider::transform_leg(matrix *transform, leg *m_leg){
     delete(end);
 }
 
-void spider::rotate_spider(GLdouble angle) {
+void Spider::rotate_spider(GLdouble angle) {
    t_point *aux;
 
    aux = aux_rotate(angle, this->abdomen->center); 
@@ -172,35 +197,41 @@ void spider::rotate_spider(GLdouble angle) {
    this->ang += angle;
 }
 
-void spider::aux_move(){
-    matrix *t = new matrix(3,3);
+void Spider::aux_move(){
+    Matrix *t = new Matrix(3,3);
     GLdouble tx, ty;
     tx = 0; ty = -TORAXSIZE/3;
     
     t_point *point = new t_point;
     point->x = tx; point->y = ty;
 
-    matrix *ap = new matrix(point);
-    matrix *ar = new matrix(3, 3);
+    Matrix *ap = new Matrix(point);
+    Matrix *ar = new Matrix(3, 3);
+
+    t_point *vNull = new t_point; vNull->x = 0; vNull->y = 0;
+    rotateMatrix(ang, vNull, ar);
+    /*
     ar->setRow(0, new GLdouble[3]{cos(ang), -sin(ang), 0});
     ar->setRow(1, new GLdouble[3]{sin(ang),  cos(ang), 0});
     ar->setRow(2, new GLdouble[3]{0,         0 ,       1});
+     */
 
-    matrix *aux = ar->multiply(ap);
+    Matrix *aux = ar->multiply(ap);
     delete(point);
     point = aux->toPoint();
 
     tx = point->x; ty = point->y;
+    translateMatrix(point, t);
     delete(point);
-
+/*
     t->setRow(0, new GLdouble[3]{1, 0, tx});
     t->setRow(1, new GLdouble[3]{0, 1, ty});
     t->setRow(2, new GLdouble[3]{0, 0, 1});
-
+*/
     this->transform(t);
 }
 
-void spider::move_spider() {
+void Spider::move_spider() {
 
     if((center->x < destination->x+TORAXSIZE) && (center->y < destination->y + TORAXSIZE ) &&
       (center->x > destination->x-TORAXSIZE) && (center->y > destination->y - TORAXSIZE ))
@@ -212,7 +243,7 @@ void spider::move_spider() {
     this->aux_move();
 }
 
-void spider::draw_circle(circle *circle){
+void Spider::draw_circle(circle *circle){
     int n_lines = 100;
     GLdouble x,y;
 
@@ -230,7 +261,7 @@ void spider::draw_circle(circle *circle){
     glFlush();
 }
 
-void spider::draw_leg(leg *leg){
+void Spider::draw_leg(leg *leg){
     glLineWidth(5);
     glBegin(GL_LINE_STRIP);
     glVertex2d(leg->orig->x, leg->orig->y);
@@ -240,7 +271,7 @@ void spider::draw_leg(leg *leg){
     glFlush();
 }
 
-void spider::draw(){
+void Spider::draw(){
     glColor3f(0, 0, 0);
     draw_circle(this->cephalothorax);
     draw_circle(this->abdomen);
@@ -252,11 +283,123 @@ void spider::draw(){
     draw_circle(this->eyes[1]);
 }
 
-void spider::animate() {
-    //TODO implements the legs animation
+
+void Spider::walk_left(double rotAng){
+    double su = 1.25;
+    double sd = 0.75;
+    Matrix *sm = new Matrix(3, 3);
+    Matrix *rm = new Matrix(3, 3);
+    Matrix *aux;
+
+    //Rotate and scale on front left leg
+    rotateMatrix(rotAng, this->legs[2]->orig, rm);
+    scaleMatrix(sd, this->legs[2]->orig, sm);
+    aux = rm->multiply(sm);
+    transform_leg(aux, this->legs[2]);
+    delete(aux);
+
+    //Rotate inner legs
+    rotateMatrix(-rotAng/2, this->legs[3]->orig, rm);
+    transform_leg(rm, this->legs[3]);
+
+    rotateMatrix(rotAng/2, this->legs[4]->orig, rm);
+    transform_leg(rm, this->legs[4]);
+
+    //Rotate and scale on back left leg
+    rotateMatrix(rotAng, this->legs[5]->orig, rm);
+    scaleMatrix(sd, this->legs[5]->orig, sm);
+    aux = rm->multiply(sm);
+    transform_leg(aux, this->legs[5]);
+    delete(aux);
+
+    //Rotate and scale on front right leg
+    rotateMatrix(rotAng, this->legs[1]->orig, rm);
+    scaleMatrix(su, this->legs[1]->orig, sm);
+    aux = rm->multiply(sm);
+    transform_leg(aux, this->legs[1]);
+    delete(aux);
+
+    //Rotate inner legs
+    rotateMatrix(-rotAng/2, this->legs[0]->orig, rm);
+    transform_leg(rm, this->legs[0]);
+
+    rotateMatrix(rotAng/2, this->legs[7]->orig, rm);
+    transform_leg(rm, this->legs[7]);
+
+    //Rotate and scale on back left leg
+    rotateMatrix(rotAng, this->legs[6]->orig, rm);
+    scaleMatrix(su, this->legs[6]->orig, sm);
+    aux = rm->multiply(sm);
+    transform_leg(aux, this->legs[6]);
+    delete(aux);
 }
 
-spider::~spider() {
+void Spider::walk_right(double rotAng){
+    double su = 1.25;
+    double sd = 0.75;
+    Matrix *sm = new Matrix(3, 3);
+    Matrix *rm = new Matrix(3, 3);
+    Matrix *aux;
+
+    //Rotate and scale on front left leg
+    rotateMatrix(-rotAng, this->legs[2]->orig, rm);
+    scaleMatrix(su, this->legs[2]->orig, sm);
+    aux = rm->multiply(sm);
+    transform_leg(aux, this->legs[2]);
+    delete(aux);
+
+    //Rotate inner legs
+    rotateMatrix(rotAng/2, this->legs[3]->orig, rm);
+    transform_leg(rm, this->legs[3]);
+
+    rotateMatrix(-rotAng/2, this->legs[4]->orig, rm);
+    transform_leg(rm, this->legs[4]);
+
+    //Rotate and scale on back left leg
+    rotateMatrix(-rotAng, this->legs[5]->orig, rm);
+    scaleMatrix(su, this->legs[5]->orig, sm);
+    aux = rm->multiply(sm);
+    transform_leg(aux, this->legs[5]);
+    delete(aux);
+
+    //Rotate and scale on front right leg
+    rotateMatrix(-rotAng, this->legs[1]->orig, rm);
+    scaleMatrix(sd, this->legs[1]->orig, sm);
+    aux = rm->multiply(sm);
+    transform_leg(aux, this->legs[1]);
+    delete(aux);
+
+    //Rotate inner legs
+    rotateMatrix(rotAng/2, this->legs[0]->orig, rm);
+    transform_leg(rm, this->legs[0]);
+
+    rotateMatrix(-rotAng/2, this->legs[7]->orig, rm);
+    transform_leg(rm, this->legs[7]);
+
+    //Rotate and scale on back left leg
+    rotateMatrix(-rotAng, this->legs[6]->orig, rm);
+    scaleMatrix(sd, this->legs[6]->orig, sm);
+    aux = rm->multiply(sm);
+    transform_leg(aux, this->legs[6]);
+    delete(aux);
+}
+
+void Spider::animate() {
+    double rang = M_PI/53;
+
+    if(this->it <= MAXIT){
+        this->walk_left(rang);
+        it++;
+    }
+    else if(this->it <= MAXIT*2){
+        this->walk_right(rang);
+        it++;
+    }
+    else
+        it = 0;
+}
+
+Spider::~Spider() {
     delete (this->abdomen->center);
     delete (this->cephalothorax->center);
     delete(this->eyes[0]->center);
@@ -276,22 +419,29 @@ spider::~spider() {
     delete[] (this->legs);
 }
 
-int spider::find_direction(t_point *point) {
-    matrix *p = new matrix(point);
-    matrix *t = new matrix(3, 3);
-    matrix *r = new matrix(3, 3);
+int Spider::find_direction(t_point *point) {
+    Matrix *p = new Matrix(point);
+    Matrix *t = new Matrix(3, 3);
+    Matrix *r = new Matrix(3, 3);
     GLdouble x = this->center->x;
     GLdouble y = this->center->y;
 
+    t_point *tp = new t_point; tp->x = -x; tp->y = -y;
+    translateMatrix(tp, t);
+    /*
     t->setRow(0, new GLdouble[3]{1, 0 ,-x});
     t->setRow(1, new GLdouble[3]{0, 1 ,-y});
     t->setRow(2, new GLdouble[3]{0, 0 ,1});
+    */
 
+    rotateMatrix(-ang, this->center, r);
+    /*
     r->setRow(0, new GLdouble[3]{cos(-ang), -sin(-ang), x - x*cos(-ang) + y*sin(-ang)});
     r->setRow(1, new GLdouble[3]{sin(-ang),  cos(-ang), y - y*cos(-ang) - x*sin(-ang)});
     r->setRow(2, new GLdouble[3]{0,         0 ,       1});
+    */
 
-    matrix *aux = t->multiply(r);
+    Matrix *aux = t->multiply(r);
 
     delete(t);
     delete(r);
@@ -317,9 +467,9 @@ int spider::find_direction(t_point *point) {
     return -1;
 }
 
-void aux_transform(matrix *m, t_point **point){
-    matrix *p = new matrix(*point);
-    matrix *aux = m->multiply(p);
+void aux_transform(Matrix *m, t_point **point){
+    Matrix *p = new Matrix(*point);
+    Matrix *aux = m->multiply(p);
 
     delete(*point);
     *point = aux->toPoint();
@@ -328,7 +478,7 @@ void aux_transform(matrix *m, t_point **point){
 
 }
 
-void spider::transform(matrix *pMatrix) {
+void Spider::transform(Matrix *pMatrix) {
     aux_transform(pMatrix, &this->center);
     aux_transform(pMatrix, &this->cephalothorax->center);
     aux_transform(pMatrix, &this->abdomen->center);
@@ -340,7 +490,7 @@ void spider::transform(matrix *pMatrix) {
     }
 }
 
-void spider::setDestination(t_point *p) {
+void Spider::setDestination(t_point *p) {
     if(p != nullptr){
         delete(destination);
         destination = p;

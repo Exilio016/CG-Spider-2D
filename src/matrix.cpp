@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include "matrix.h"
 
-matrix::matrix(int rows, int cols){
+Matrix::Matrix(int rows, int cols){
     this->rows = rows; this->cols = cols;
     this->m = new GLdouble* [rows] ;
 
@@ -15,7 +15,7 @@ matrix::matrix(int rows, int cols){
     }
 }
 
-matrix::matrix(t_point *point){
+Matrix::Matrix(t_point *point){
     this->rows = 3; this->cols = 1;
     this->m = new GLdouble* [3];
 
@@ -30,11 +30,11 @@ matrix::matrix(t_point *point){
 
 }
 
-matrix *matrix::multiply(matrix *m2) {
+Matrix *Matrix::multiply(Matrix *m2) {
     if(m2 == nullptr || (this->cols != m2->rows))
         return nullptr;
 
-    matrix *ret = new matrix(this->rows, m2->cols);
+    Matrix *ret = new Matrix(this->rows, m2->cols);
     for(int i = 0; i < this->rows; i++){
         for(int j = 0; j < m2->cols; j++){
             ret->m[i][j] = 0;
@@ -47,7 +47,7 @@ matrix *matrix::multiply(matrix *m2) {
     return ret;
 }
 
-void matrix::setPos(int row, int col, GLdouble val) {
+void Matrix::setPos(int row, int col, GLdouble val) {
     if(row < this->rows && col < this->cols && row >= 0 && col >= 0){
         this->m[row][col] = val;
         return;
@@ -56,7 +56,7 @@ void matrix::setPos(int row, int col, GLdouble val) {
     throw std::invalid_argument("Invalid matrix position!");
 }
 
-void matrix::setRow(int row, GLdouble *vals) {
+void Matrix::setRow(int row, GLdouble *vals) {
     if(row < 0 && row >= rows)
         throw std::invalid_argument("Invalid matrix row!");
 
@@ -64,7 +64,7 @@ void matrix::setRow(int row, GLdouble *vals) {
     this->m[row] = vals;
 }
 
-t_point *matrix::toPoint(){
+t_point *Matrix::toPoint(){
     if(this->rows != 3 && this->cols != 1)
         throw std::invalid_argument("Impossible to convert this matrix!");
 
@@ -73,11 +73,11 @@ t_point *matrix::toPoint(){
     point->y = this->m[1][0];
 }
 
-GLdouble matrix::getPos(int row, int col) {
+GLdouble Matrix::getPos(int row, int col) {
     return this->m[row][col];
 }
 
-matrix::~matrix() {
+Matrix::~Matrix() {
     for(int i = 0; i < rows; i++)
         delete[] m[i];
     delete[] m;

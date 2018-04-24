@@ -9,7 +9,7 @@
 #include "types.h"
 #include "matrix.h"
 
-class spider {
+class Spider {
 
 private:
     circle **eyes;
@@ -57,15 +57,17 @@ private:
      * @param m - the transformation matrix
      * @param l - the leg you wants to transform
      */
-    void transform_leg(matrix *m, leg *l);
+    void transform_leg(Matrix *m, leg *l);
 
     /**
      * Method that applies a transformation in the spider
      * @param pMatrix - the transformation matrix
      */
-    void transform(matrix *pMatrix);
+    void transform(Matrix *pMatrix);
 
     void aux_move();
+
+    void walk_left(double rotAng);
 
 public:
 
@@ -73,8 +75,8 @@ public:
      * Constructor of the class, it sets the points of the spider
      * @param pos - t_point with the coordinates you want to draws the spider
      */
-    explicit spider(t_point *pos);
-    ~spider();
+    explicit Spider(t_point *pos);
+    ~Spider();
 
     /**
      * Method that moves the spider into the direction of the attribute t_point *destination
@@ -103,6 +105,10 @@ public:
      * @param p - the destination point
      */
     void setDestination(t_point *p);
+
+    int it = 0;
+
+    void walk_right(double rotAng);
 };
 
 
