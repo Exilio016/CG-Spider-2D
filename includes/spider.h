@@ -26,8 +26,8 @@ private:
 
     state currentState = stopped;
     state oldState = walking_dir;
-    int it = 4;
-    bool walking = true;
+    int it = 5;
+    bool walking = false;
     t_point *destination;
     double ang;
 
