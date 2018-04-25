@@ -218,24 +218,13 @@ void Spider::aux_move(){
     vNull->y = 0;
 
     rotateMatrix(ang, vNull, ar);
-    /*
-    ar->setRow(0, new GLdouble[3]{cos(ang), -sin(ang), 0});
-    ar->setRow(1, new GLdouble[3]{sin(ang),  cos(ang), 0});
-    ar->setRow(2, new GLdouble[3]{0,         0 ,       1});
-     */
 
     Matrix *aux = ar->multiply(ap);
     delete(point);
     point = aux->toPoint();
 
-    tx = point->x; ty = point->y;
     translateMatrix(point, t);
     delete(point);
-/*
-    t->setRow(0, new GLdouble[3]{1, 0, tx});
-    t->setRow(1, new GLdouble[3]{0, 1, ty});
-    t->setRow(2, new GLdouble[3]{0, 0, 1});
-*/
     this->transform(t);
 }
 
@@ -425,6 +414,7 @@ void Spider::animate() {
         else{
             //Reescale the legs
             if(it == 4) {
+
                 Matrix *reescale = new Matrix(3, 3);
                 scaleMatrix(1.07, this->legs[2]->orig, reescale);
                 transform_leg(reescale, this->legs[2]);
@@ -501,18 +491,8 @@ int Spider::find_direction(t_point *point) {
 
     t_point *tp = new t_point; tp->x = -x; tp->y = -y;
     translateMatrix(tp, t);
-    /*
-    t->setRow(0, new GLdouble[3]{1, 0 ,-x});
-    t->setRow(1, new GLdouble[3]{0, 1 ,-y});
-    t->setRow(2, new GLdouble[3]{0, 0 ,1});
-    */
 
     rotateMatrix(-ang, this->center, r);
-    /*
-    r->setRow(0, new GLdouble[3]{cos(-ang), -sin(-ang), x - x*cos(-ang) + y*sin(-ang)});
-    r->setRow(1, new GLdouble[3]{sin(-ang),  cos(-ang), y - y*cos(-ang) - x*sin(-ang)});
-    r->setRow(2, new GLdouble[3]{0,         0 ,       1});
-    */
 
     Matrix *aux = t->multiply(r);
 
