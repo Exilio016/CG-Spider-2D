@@ -232,14 +232,16 @@ void Spider::aux_move(){
 }
 
 void Spider::move_spider() {
+    this->walking = true;
 
     if((center->x < destination->x+TORAXSIZE) && (center->y < destination->y + TORAXSIZE ) &&
-      (center->x > destination->x-TORAXSIZE) && (center->y > destination->y - TORAXSIZE ))
-
+      (center->x > destination->x-TORAXSIZE) && (center->y > destination->y - TORAXSIZE )) {
+        this->walking = false;
         return;
+    }
 
     int signal = find_direction(destination);
-    rotate_spider(signal*M_PI/8);
+    rotate_spider(signal*M_PI/24);
     this->aux_move();
 }
 
@@ -285,8 +287,8 @@ void Spider::draw(){
 
 
 void Spider::walk_left(double rotAng){
-    double su = 1.25;
-    double sd = 0.75;
+    double su = 1.15;
+    double sd = 0.85;
     Matrix *sm = new Matrix(3, 3);
     Matrix *rm = new Matrix(3, 3);
     Matrix *aux;
@@ -335,8 +337,8 @@ void Spider::walk_left(double rotAng){
 }
 
 void Spider::walk_right(double rotAng){
-    double su = 1.25;
-    double sd = 0.75;
+    double su = 1.15;
+    double sd = 0.85;
     Matrix *sm = new Matrix(3, 3);
     Matrix *rm = new Matrix(3, 3);
     Matrix *aux;
@@ -387,16 +389,60 @@ void Spider::walk_right(double rotAng){
 void Spider::animate() {
     double rang = M_PI/53;
 
-    if(this->it <= MAXIT){
-        this->walk_left(rang);
-        it++;
+    this->it++;
+    if(this->currentState == stopped){
+        if(this->it <= MAXIT) {
+            if (this->oldState == walking_dir)
+                this->walk_left(rang);
+            else
+                this->walk_right(rang);
+        }
+        else{
+            if(it == 4) {
+                Matrix *reescale = new Matrix(3, 3);
+                scaleMatrix(1.07, this->legs[2]->orig, reescale);
+                transform_leg(reescale, this->legs[2]);
+                scaleMatrix(1.07, this->legs[1]->orig, reescale);
+                transform_leg(reescale, this->legs[1]);
+                scaleMatrix(1.07, this->legs[5]->orig, reescale);
+                transform_leg(reescale, this->legs[5]);
+                scaleMatrix(1.07, this->legs[6]->orig, reescale);
+                transform_leg(reescale, this->legs[6]);
+                delete (reescale);
+            }
+
+            if(this->walking){
+                this->it = 0;
+
+                if(this->oldState == walking_dir)
+                    this->currentState = walking_left;
+                else
+                    this->currentState = walking_dir;
+            }
+        }
     }
-    else if(this->it <= MAXIT*2){
-        this->walk_right(rang);
-        it++;
+
+    else if(this->currentState == walking_left){
+        if(this->it <= MAXIT) {
+            this->walk_left(rang);
+        }
+        else{
+            this->it = 0;
+            this->currentState = stopped;
+            this->oldState = walking_left;
+        }
     }
-    else
-        it = 0;
+
+    else {
+        if(this->it <= MAXIT) {
+            this->walk_right(rang);
+        }
+        else{
+            this->it = 0;
+            this->currentState =stopped;
+            this->oldState = walking_dir;
+        }
+    }
 }
 
 Spider::~Spider() {

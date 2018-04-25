@@ -24,8 +24,10 @@ private:
         walking_dir
     }state;
 
-    state currentState;
-    state oldState;
+    state currentState = stopped;
+    state oldState = walking_dir;
+    int it = 4;
+    bool walking = true;
     t_point *destination;
     double ang;
 
@@ -106,7 +108,6 @@ public:
      */
     void setDestination(t_point *p);
 
-    int it = 0;
 
     void walk_right(double rotAng);
 };
