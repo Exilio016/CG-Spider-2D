@@ -9,7 +9,7 @@
 #include <GL/gl.h>
 #include "types.h"
 
-class matrix {
+class Matrix {
 private:
     GLdouble **m;
 
@@ -21,16 +21,16 @@ public:
      * @param rows - number of rows in the matrix
      * @param cols  - number of columns in the matrix
      */
-    matrix(int rows, int cols);
+    Matrix(int rows, int cols);
 
 
     /**
      * Contructor of the class, that creates a matrix of the homogeneous coordinates of a point
      * @param point - t_point of the coordinates
      */
-    explicit matrix(t_point *point);
+    explicit Matrix(t_point *point);
 
-    ~matrix();
+    ~Matrix();
 
     /**
      * Method that sets a position of the matrix
@@ -52,7 +52,7 @@ public:
       * @param m2 - the matrix you want to multiply
       * @return the solution matrix
       */
-    matrix *multiply(matrix *m2);
+    Matrix *multiply(Matrix *m2);
 
     /**
      * Method that convert a 3x1 matrix into a t_point
