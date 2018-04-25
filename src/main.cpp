@@ -38,8 +38,10 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
    if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
 
       t_point *p = new t_point;
-      p->x = x; p->y = y;
-      s->setDestination(p);
+      p->x = x; 
+      p->y = y;
+
+      s->setDestination(p); //Destination of the spider
       glutPostRedisplay();
       //s->move_spider();
       s->draw();
@@ -52,8 +54,10 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
 void mouseDrag(GLint x, GLint y) {
    
       t_point *p = new t_point;
-      p->x = x; p->y = y;
-      s->setDestination(p);
+      p->x = x; 
+      p->y = y;
+
+      s->setDestination(p); //Destination of the spider
       glutPostRedisplay();
       //s->move_spider();
       s->draw();
@@ -65,9 +69,9 @@ void move_spider(int ref){
         return;
 
     glutPostRedisplay();
-    s->animate();
-    s->move_spider();
-    s->draw();
+    s->animate();       //Animation of the spider walking
+    s->move_spider();   //Moving the spider to the destination
+    s->draw();          //Showing the spider on the screen
     glutTimerFunc(1000/FRAMES, move_spider, 1);
 }
 

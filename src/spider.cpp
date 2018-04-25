@@ -16,11 +16,12 @@ enum {
 };
 
 #define TORAXSIZE 40
-#define EYESIZE 3
+#define EYESIZE 2.5
 #define LEGSIZE 45
 #define ARTICANG 3.75
 #define MAXIT 3
 
+//Multiplication matrix
 void scaleMatrix(double s, t_point *p, Matrix *m){
     if(m != nullptr && m->rows == 3 && m->cols == 3){
         m->setRow(0, new GLdouble[3]{s, 0, p->x * (1 - s)});
@@ -60,7 +61,7 @@ Spider::Spider(t_point *pos) {
 
    this->abdomen->center = new t_point;
    this->abdomen->center->x = pos->x;
-   this->abdomen->center->y = pos->y + TORAXSIZE - TORAXSIZE/10;
+   this->abdomen->center->y = pos->y + (TORAXSIZE*9/10);
    this->abdomen->radius = TORAXSIZE;
 
    this->cephalothorax->center = new t_point;
@@ -123,6 +124,7 @@ Spider::Spider(t_point *pos) {
    }
 }
 
+//Function to rotate each part of the body
 t_point *Spider::aux_rotate(GLdouble angle, t_point *init) {
    t_point *result = new t_point;
    t_point *axis = (this->center);
@@ -132,6 +134,7 @@ t_point *Spider::aux_rotate(GLdouble angle, t_point *init) {
       axis->y * (1 - cos(angle)) - axis->x * sin(angle);
    return result;
 }
+
 
 void Spider::transform_leg(Matrix *transform, leg *m_leg){
     if(transform == nullptr || transform->rows != 3 || transform->cols != 3)
@@ -200,15 +203,20 @@ void Spider::rotate_spider(GLdouble angle) {
 void Spider::aux_move(){
     Matrix *t = new Matrix(3,3);
     GLdouble tx, ty;
-    tx = 0; ty = -TORAXSIZE/3;
+    tx = 0; 
+    ty = -TORAXSIZE/3;
     
     t_point *point = new t_point;
-    point->x = tx; point->y = ty;
+    point->x = tx; 
+    point->y = ty;
 
     Matrix *ap = new Matrix(point);
     Matrix *ar = new Matrix(3, 3);
 
-    t_point *vNull = new t_point; vNull->x = 0; vNull->y = 0;
+    t_point *vNull = new t_point; 
+    vNull->x = 0; 
+    vNull->y = 0;
+
     rotateMatrix(ang, vNull, ar);
     /*
     ar->setRow(0, new GLdouble[3]{cos(ang), -sin(ang), 0});
@@ -232,19 +240,24 @@ void Spider::aux_move(){
 }
 
 void Spider::move_spider() {
-    this->walking = true;
+    this->walking = true;   //used to animate the legs
 
+    //check if the spider is near the position of the mouse click
     if((center->x < destination->x+TORAXSIZE) && (center->y < destination->y + TORAXSIZE ) &&
       (center->x > destination->x-TORAXSIZE) && (center->y > destination->y - TORAXSIZE )) {
         this->walking = false;
         return;
     }
 
-    int signal = find_direction(destination);
-    rotate_spider(signal*M_PI/24);
+    //discover if the spider has to rotate
+    //clockwise or counter-clockwise
+    int signal = find_direction(destination);   
+    rotate_spider(signal*M_PI/12);
     this->aux_move();
 }
 
+//create circle the same way of the exercise
+//but using GL_TRIANGLE_STRIP to color it
 void Spider::draw_circle(circle *circle){
     int n_lines = 100;
     GLdouble x,y;
@@ -260,21 +273,24 @@ void Spider::draw_circle(circle *circle){
         glVertex2d(x,y);
     }
     glEnd();
+
     glFlush();
 }
 
+//each leg has its own points
 void Spider::draw_leg(leg *leg){
     glLineWidth(5);
     glBegin(GL_LINE_STRIP);
-    glVertex2d(leg->orig->x, leg->orig->y);
-    glVertex2d(leg->articulation->x, leg->articulation->y);
-    glVertex2d(leg->end->x, leg->end->y);
+        glVertex2d(leg->orig->x, leg->orig->y);
+        glVertex2d(leg->articulation->x, leg->articulation->y);
+        glVertex2d(leg->end->x, leg->end->y);
     glEnd();
+
     glFlush();
 }
 
 void Spider::draw(){
-    glColor3f(0, 0, 0);
+    glColor3f(0, 0, 0);     //color black
     draw_circle(this->cephalothorax);
     draw_circle(this->abdomen);
     for(int i = 0; i < 8; i++)
@@ -300,10 +316,12 @@ void Spider::walk_left(double rotAng){
     transform_leg(aux, this->legs[2]);
     delete(aux);
 
-    //Rotate inner legs
+    //Rotate left inner legs
+    //Front
     rotateMatrix(-rotAng/2, this->legs[3]->orig, rm);
     transform_leg(rm, this->legs[3]);
 
+    //Back
     rotateMatrix(rotAng/2, this->legs[4]->orig, rm);
     transform_leg(rm, this->legs[4]);
 
@@ -321,14 +339,16 @@ void Spider::walk_left(double rotAng){
     transform_leg(aux, this->legs[1]);
     delete(aux);
 
-    //Rotate inner legs
+    //Rotate right inner legs
+    //Front
     rotateMatrix(-rotAng/2, this->legs[0]->orig, rm);
     transform_leg(rm, this->legs[0]);
 
+    //Back
     rotateMatrix(rotAng/2, this->legs[7]->orig, rm);
     transform_leg(rm, this->legs[7]);
 
-    //Rotate and scale on back left leg
+    //Rotate and scale on back right leg
     rotateMatrix(rotAng, this->legs[6]->orig, rm);
     scaleMatrix(su, this->legs[6]->orig, sm);
     aux = rm->multiply(sm);
@@ -350,10 +370,12 @@ void Spider::walk_right(double rotAng){
     transform_leg(aux, this->legs[2]);
     delete(aux);
 
-    //Rotate inner legs
+    //Rotate left inner legs
+    //Front
     rotateMatrix(rotAng/2, this->legs[3]->orig, rm);
     transform_leg(rm, this->legs[3]);
 
+    //Back
     rotateMatrix(-rotAng/2, this->legs[4]->orig, rm);
     transform_leg(rm, this->legs[4]);
 
@@ -371,14 +393,16 @@ void Spider::walk_right(double rotAng){
     transform_leg(aux, this->legs[1]);
     delete(aux);
 
-    //Rotate inner legs
+    //Rotate right inner legs
+    //Front
     rotateMatrix(rotAng/2, this->legs[0]->orig, rm);
     transform_leg(rm, this->legs[0]);
 
+    //Back
     rotateMatrix(-rotAng/2, this->legs[7]->orig, rm);
     transform_leg(rm, this->legs[7]);
 
-    //Rotate and scale on back left leg
+    //Rotate and scale on back right leg
     rotateMatrix(-rotAng, this->legs[6]->orig, rm);
     scaleMatrix(sd, this->legs[6]->orig, sm);
     aux = rm->multiply(sm);
@@ -392,12 +416,14 @@ void Spider::animate() {
     this->it++;
     if(this->currentState == stopped){
         if(this->it <= MAXIT) {
+            //Change the order of the legs
             if (this->oldState == walking_dir)
                 this->walk_left(rang);
             else
                 this->walk_right(rang);
         }
         else{
+            //Reescale the legs
             if(it == 4) {
                 Matrix *reescale = new Matrix(3, 3);
                 scaleMatrix(1.07, this->legs[2]->orig, reescale);
@@ -414,6 +440,7 @@ void Spider::animate() {
             if(this->walking){
                 this->it = 0;
 
+                //Change the order of the legs
                 if(this->oldState == walking_dir)
                     this->currentState = walking_left;
                 else

@@ -8,5 +8,4 @@
 
 bool compareDouble(double a, double b) {
     return (fabs(a- b) <= std::numeric_limits<double>::epsilon());
-
 }
