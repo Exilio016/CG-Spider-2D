@@ -20,6 +20,7 @@ enum {
 #define LEGSIZE 45
 #define ARTICANG 3.75
 #define MAXIT 3
+#define REESC 1.008
 
 //Multiplication matrix
 void scaleMatrix(double s, t_point *p, Matrix *m){
@@ -279,7 +280,7 @@ void Spider::draw_circle(circle *circle){
 
 //each leg has its own points
 void Spider::draw_leg(leg *leg){
-    glLineWidth(5);
+    glLineWidth(3);
     glBegin(GL_LINE_STRIP);
         glVertex2d(leg->orig->x, leg->orig->y);
         glVertex2d(leg->articulation->x, leg->articulation->y);
@@ -303,8 +304,8 @@ void Spider::draw(){
 
 
 void Spider::walk_left(double rotAng){
-    double su = 1.15;
-    double sd = 0.85;
+    double su = 1.05;
+    double sd = 0.95;
     Matrix *sm = new Matrix(3, 3);
     Matrix *rm = new Matrix(3, 3);
     Matrix *aux;
@@ -357,8 +358,8 @@ void Spider::walk_left(double rotAng){
 }
 
 void Spider::walk_right(double rotAng){
-    double su = 1.15;
-    double sd = 0.85;
+    double su = 1.05;
+    double sd = 0.95;
     Matrix *sm = new Matrix(3, 3);
     Matrix *rm = new Matrix(3, 3);
     Matrix *aux;
@@ -411,7 +412,7 @@ void Spider::walk_right(double rotAng){
 }
 
 void Spider::animate() {
-    double rang = M_PI/53;
+    double rang = M_PI/48;
 
     this->it++;
     if(this->currentState == stopped){
@@ -426,13 +427,13 @@ void Spider::animate() {
             //Reescale the legs
             if(it == 4) {
                 Matrix *reescale = new Matrix(3, 3);
-                scaleMatrix(1.07, this->legs[2]->orig, reescale);
+                scaleMatrix(REESC, this->legs[2]->orig, reescale);
                 transform_leg(reescale, this->legs[2]);
-                scaleMatrix(1.07, this->legs[1]->orig, reescale);
+                scaleMatrix(REESC, this->legs[1]->orig, reescale);
                 transform_leg(reescale, this->legs[1]);
-                scaleMatrix(1.07, this->legs[5]->orig, reescale);
+                scaleMatrix(REESC, this->legs[5]->orig, reescale);
                 transform_leg(reescale, this->legs[5]);
-                scaleMatrix(1.07, this->legs[6]->orig, reescale);
+                scaleMatrix(REESC, this->legs[6]->orig, reescale);
                 transform_leg(reescale, this->legs[6]);
                 delete (reescale);
             }
