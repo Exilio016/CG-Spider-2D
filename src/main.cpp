@@ -15,9 +15,9 @@ void init(){
    glClearColor(1, 1, 1, 1);
    glMatrixMode(GL_PROJECTION);
 
-   t_point *p = new t_point;
-   p->x = WINDOWS_WIDTH/2;
-   p->y = WINDOWS_HEIGHT/2;
+   auto *p = new t_point;
+   p->x = (double) WINDOWS_WIDTH/2;
+   p->y = (double) WINDOWS_HEIGHT/2;
 
    s = new Spider(p);
 
@@ -37,7 +37,7 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
    //GLUT_UP
    if (button == GLUT_LEFT_BUTTON && action == GLUT_DOWN) {
 
-      t_point *p = new t_point;
+      auto *p = new t_point;
       p->x = x; 
       p->y = y;
 
@@ -53,7 +53,7 @@ void mouseClick(GLint button, GLint action, GLint x, GLint y) {
  * and moving */
 void mouseDrag(GLint x, GLint y) {
    
-      t_point *p = new t_point;
+      auto *p = new t_point;
       p->x = x; 
       p->y = y;
 
@@ -77,9 +77,9 @@ void move_spider(int ref){
 
 int main(int argc, char *argv[]){
    glutInit(&argc, argv);
-   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA); // NOLINT
 
-   GLint screen_width = glutGet(GLUT_SCREEN_WIDTH),
+    GLint screen_width = glutGet(GLUT_SCREEN_WIDTH),
          screen_height = glutGet(GLUT_SCREEN_HEIGHT);
 
    glutInitWindowPosition((screen_width - WINDOWS_WIDTH)/2, (screen_height - WINDOWS_HEIGHT)/2);

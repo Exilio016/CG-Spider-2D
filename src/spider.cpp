@@ -15,9 +15,9 @@ enum {
    Y
 };
 
-#define TORAXSIZE 40
+#define TORAXSIZE 40.0
 #define EYESIZE 2.5
-#define LEGSIZE 45
+#define LEGSIZE 45.0
 #define ARTICANG 3.75
 #define MAXIT 3
 
