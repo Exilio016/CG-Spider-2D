@@ -28,4 +28,8 @@ Then you can run the file Aranha2D
 ```shell
 ./Aranha2D
 ```
+## LICENSE
+This project is licensed under the terms of the MIT license.
+
+[LICENSE](https://github.com/Exilio016/CG-Spider-2D/blob/master/LICENSE)
 
